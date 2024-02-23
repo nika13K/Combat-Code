@@ -1,0 +1,70 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <random>
+#include <cmath>
+
+using namespace std;
+
+int main() {
+    double MaxPower, ChosenPower, CurrentPower, RandomPower, HostilePower;
+    const int HHP = 20;
+    const int PHP = 20;
+    srand(time(NULL));  // initialize random seed
+
+    cout << "Enter the value of MaxPower: ";
+    cin >> MaxPower;
+    CurrentPower = MaxPower;  // set initial value of CurrentPower equal to MaxPower
+    HostilePower = MaxPower;  // set initial value of HostilePower equal to MaxPower
+
+    std::uniform_int_distribution<int> dist(0, (int)HostilePower);
+
+    while (HHP > 0 && PHP > 0) {
+        cout << "Enter the value of ChosenPower: ";
+        cin >> ChosenPower;
+        if (ChosenPower > CurrentPower) {
+            cout << "Invalid input. ChosenPower cannot be greater than CurrentPower." << endl;
+            continue;
+        }
+        RandomPower = dist(mt); // generate a random number between 0 and HostilePower
+        cout << "Random number: " << RandomPower << endl;
+
+        if (RandomPower < ChosenPower) {
+            if (ChosenPower < MaxPower*0.2) {
+                CurrentPower = CurrentPower-ChosenPower/2;
+                --HHP;
+            } else if (ChosenPower > MaxPower*0.2 && ChosenPower < MaxPower*0.5) {
+                CurrentPower = CurrentPower-ChosenPower;
+                HHP -= 3;
+            } else {
+                CurrentPower = CurrentPower/2;
+                HHP -= 4;
+            }
+            cout << "New value of CurrentPower: " << CurrentPower << endl;
+            cout << "New value of HHP: " << HHP << endl;
+        } else if (ChosenPower < RandomPower) {
+            if (RandomPower < MaxPower*0.2) {
+                HostilePower = HostilePower-RandomPower/2;
+                --PHP;
+            } else if (RandomPower > MaxPower*0.2 && RandomPower < MaxPower*0.5) {
+                HostilePower = HostilePower-RandomPower;
+                PHP -= 3;
+            } else {
+                HostilePower = HostilePower/2;
+                PHP -= 4;
+            }
+            cout << "New value of HostilePower: " << HostilePower << endl;
+            cout << "New value of PHP: " << PHP << endl;
+        }
+		
+
+    }
+
+    if (HHP == 0 && PHP > 0) {
+        cout << "You win!" << endl;
+    } else {
+        cout << "You lose!" << endl;
+    }
+
+    return 0;
+}
